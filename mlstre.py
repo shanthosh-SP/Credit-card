@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
 # Load the dataset
-dataset = pd.read_csv("C:/Users/ShanthoshV/Downloads/credit card clients.csv")
+dataset = pd.read_csv("credit card clients.csv")
 
 # Perform data preprocessing steps here
 # ...
