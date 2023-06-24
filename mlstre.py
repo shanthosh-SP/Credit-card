@@ -315,7 +315,7 @@ def return_head(filename):
     gc.collect()
     return head
 
-st.image('LinkedIn Banner.png')
+st.image('LinkedIn Banner1.png')
 st.markdown('## Business Problem')
 st.markdown('* The problem is of risk modelling.')
 st.markdown('* Given the data of a client we have to predict if he/she will be defaulter in paying credit card bill Next Month.')
