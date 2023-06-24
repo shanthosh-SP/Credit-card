@@ -144,11 +144,16 @@ X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.3,random_stat
 
 # XGBoost Model
 def train_xgboost(predictiontime):
-	xgb = XGBClassifier(    n_estimators: 100,
+	# Define the hyperparameters
+hyperparameters = {
+    'n_estimators': 100,
     'max_depth': 3,
     'learning_rate': 0.1,
     'subsample': 0.8,
-    'colsample_bytree': 0.8)
+    'colsample_bytree': 0.8
+}
+# Create the XGBoost model with the specified hyperparameters
+	xgb = XGBClassifier(**hyperparameters)
 	xgb.fit(X_train, Y_train)
 	y_pred =xgb.predict(X_test)
 	from sklearn.metrics import  accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
