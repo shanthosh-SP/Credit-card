@@ -358,10 +358,10 @@ if error_flag==0:
 
 def display_top_5(top5_data):
     st.markdown('## Top 5 features that helped in prediction ')
-    st.markdown('### EXT_SOURCE_1: ')
+    st.markdown('### PAY_5: ')
     st.markdown('Normalized score from external data source.')
     fig,axes=plt.subplots()
-    axes.set_xlabel('EXT_SOURCE_1')
+    axes.set_xlabel('pay_5')
     axes.set_ylabel('Density')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_5'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_5'],label='Will Default')
@@ -377,12 +377,12 @@ def display_top_5(top5_data):
 
     
     
-    st.markdown('### PAYMENT_RATE: ')
+    st.markdown('### PAY_3: ')
     st.markdown('Payment rate is ratio of Amount Annuity and Amount Credit.')
     st.markdown('Amount Annuity is the amount paid back in periodic intervals.')
     st.markdown('Amount Credit is the amount recieved by the institution.')
     fig,axes=plt.subplots()
-    axes.set_xlabel('PAYMENT_RATE')
+    axes.set_xlabel('PAY_3')
     axes.set_ylabel('Density')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_3'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_3'],label='Will Default')
@@ -397,10 +397,10 @@ def display_top_5(top5_data):
 
     
    
-    st.markdown('### AGE: ')
+    st.markdown('### PAY_2: ')
     st.markdown("Client's age at the time of application.")
     fig,axes=plt.subplots()
-    axes.set_xlabel('Age')
+    axes.set_xlabel('pay_2')
     axes.set_ylabel('Density')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_2'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_2'],label='Will Default')
@@ -412,10 +412,10 @@ def display_top_5(top5_data):
     st.markdown('#### Conclusion')
     st.markdown('Younger clients are more likely to default as compared to older.')
     
-    st.markdown('### EXT_SOURCE_3: ')
+    st.markdown('### PAY_1: ')
     st.markdown('Normalized score from external data source.')
     fig,axes=plt.subplots()
-    axes.set_xlabel('EXT_SOURCE_3')
+    axes.set_xlabel('pay_1')
     axes.set_ylabel('Density')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_1'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_1'],label='Will Default')
