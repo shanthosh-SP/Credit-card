@@ -157,7 +157,7 @@ def train_xgboost(predictiontime):
 	results = pd.DataFrame([['XGBoost', acc,prec,rec, f1,roc]],
                columns = ['Model', 'Accuracy', 'Precision', 'Recall', 'F1 Score','ROC'])
 	input_data_as_numpy_array = np.asarray(predictiontime)
-	#st.write(input_data_as_numpy_array)
+	st.write(input_data_as_numpy_array)
 
 #reshape the array as we are predicting for one instance
 	input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
