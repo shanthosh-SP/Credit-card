@@ -15,7 +15,7 @@ import gc
 
 
 # Load the dataset
-dataset = pd.read_excel("D:/MLprospect/default of credit card clients 1.xlsx")
+dataset = pd.read_excel("default of credit card clients 1.xlsx")
 
 # Perform data preprocessing steps here
 # ...
