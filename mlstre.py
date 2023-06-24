@@ -15,7 +15,7 @@ import gc
 
 
 # Load the dataset
-dataset = pd.read_csv("credit card clients.csv")
+dataset = pd.read_excel("D:/MLprospect/default of credit card clients 1.xlsx")
 
 # Perform data preprocessing steps here
 # ...
@@ -114,6 +114,9 @@ dataset[col_to_norm] = dataset[col_to_norm].apply(lambda x : (x-np.mean(x))/np.s
 X = dataset.drop(columns = 'def_pay', axis=1)
 Y = dataset['def_pay']
 
+
+top5_data=dataset[['pay_4','pay_1','pay_2','pay_3','pay_5','def_pay']]
+
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 scaler.fit(X)
@@ -140,11 +143,20 @@ y = dataset.iloc[:,-1].values
 from sklearn.model_selection import train_test_split
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.3,random_state = 1)
 
+# Define the hyperparameters
+hyperparameters = {
+    'n_estimators': 200,
+    'max_depth': 5,
+    'learning_rate': 0.3,
+    'subsample': 0.2,
+    'colsample_bytree': 0.8
+}
 
+# Create the XGBoost model with the specified hyperparameters
 
 # XGBoost Model
 def train_xgboost(predictiontime):
-	xgb = XGBClassifier()
+	xgb = XGBClassifier(**hyperparameters)
 	xgb.fit(X_train, Y_train)
 	y_pred =xgb.predict(X_test)
 	from sklearn.metrics import  accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
@@ -344,6 +356,83 @@ if error_flag==0:
 	st.write(df)
 
 
+def display_top_5(top5_data):
+    st.markdown('## Top 5 features that helped in prediction ')
+    st.markdown('### EXT_SOURCE_1: ')
+    st.markdown('Normalized score from external data source.')
+    fig,axes=plt.subplots()
+    axes.set_xlabel('EXT_SOURCE_1')
+    axes.set_ylabel('Density')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_5'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_5'],label='Will Default')
+    st.pyplot(fig)
+    
+    st.markdown('#### Analysis')
+    st.markdown('* External source 1 < 0.5 indicate high probability that client will not repay loan.')
+    st.markdown('* External source 1 > 0.5 indicate high probability that client will default loan.')
+    st.markdown('* There is a visible sepration between two classes.')
+    
+    st.markdown('#### Conclusion')
+    st.markdown('* External source 1 is a useful feature.')
+
+    
+    
+    st.markdown('### PAYMENT_RATE: ')
+    st.markdown('Payment rate is ratio of Amount Annuity and Amount Credit.')
+    st.markdown('Amount Annuity is the amount paid back in periodic intervals.')
+    st.markdown('Amount Credit is the amount recieved by the institution.')
+    fig,axes=plt.subplots()
+    axes.set_xlabel('PAYMENT_RATE')
+    axes.set_ylabel('Density')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_3'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_3'],label='Will Default')
+    st.pyplot(fig)
+    st.markdown('#### Analysis')
+    st.markdown('* Client having payment rate < 0.06 have higher chance of repaying loan ')
+    st.markdown('* Client having payment rate > 0.06 and payment rate < 0.09  have higher chance of defaulting loan.')
+    st.markdown('* Client having payment rate between 0.09 and 0.11 have higher chance of repaying loan.')
+    st.markdown('* There is a visible sepration between two classes.')
+    st.markdown('#### Conclusion')
+    st.markdown('* Payment Rate is a useful feature.')
+
+    
+   
+    st.markdown('### AGE: ')
+    st.markdown("Client's age at the time of application.")
+    fig,axes=plt.subplots()
+    axes.set_xlabel('Age')
+    axes.set_ylabel('Density')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_2'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_2'],label='Will Default')
+    st.pyplot(fig)
+    st.markdown('#### Analysis')
+    st.markdown('* Client having age  less than 40 have high probability of being default. ')
+    st.markdown('* Client having age  greater than 40 have high probability of repaying loan.')
+    st.markdown('* There is a visible sepration between two classes.')
+    st.markdown('#### Conclusion')
+    st.markdown('Younger clients are more likely to default as compared to older.')
+    
+    st.markdown('### EXT_SOURCE_3: ')
+    st.markdown('Normalized score from external data source.')
+    fig,axes=plt.subplots()
+    axes.set_xlabel('EXT_SOURCE_3')
+    axes.set_ylabel('Density')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_1'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_1'],label='Will Default')
+    st.pyplot(fig)
+    st.markdown('#### Analysis')
+    st.markdown('* External source 3 < 0.4 indicate high probability that client will default loan.')
+    st.markdown('* (External source 3 > 0.5 and External source 3 < 0.9) indicate high probability that client will repay loan.')
+    st.markdown('* There is a visible sepration between two classes.')
+    
+    st.markdown('#### Conclusion')
+    st.markdown('* External source 3 is a useful feature.')
+    
+
+    
+    del top5_data
+    gc.collect()
+
 
 
 def main():
@@ -370,6 +459,8 @@ def main():
 
 		st.subheader("Prediction Results")
 		st.write(prediction)
+	display_top_5(top5_data)
+
 
 
 
