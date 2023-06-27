@@ -56,7 +56,7 @@ dataset['def_pay'].value_counts(dropna=False)
 
 dataset['def_pay'] = dataset['def_pay'].map({0:'Non_Defaulter',1:'Defaulter'})
 
-dataset.head()
+print(dataset.head())
 
 
 # Converting categorical columns into Numerical columns
@@ -71,6 +71,7 @@ dataset['def_pay'] = dataset['def_pay'].map({'Non_Defaulter':0,'Defaulter':1})
 
 dataset.head()
 
+print(dataset.head())
 
 
 
@@ -106,17 +107,17 @@ dataset.columns = dataset.columns.map(str.lower)
 
 
 
-col_to_norm = ['limit_bal', 'age', 'bill_amt1', 'bill_amt2', 'bill_amt3', 'bill_amt4',
+col_to_norm = ['limit_bal', 'bill_amt1', 'bill_amt2', 'bill_amt3', 'bill_amt4',
        'bill_amt5', 'bill_amt6', 'pay_amt1', 'pay_amt2', 'pay_amt3',
        'pay_amt4', 'pay_amt5', 'pay_amt6']
 dataset[col_to_norm] = dataset[col_to_norm].apply(lambda x : (x-np.mean(x))/np.std(x))
 
 X = dataset.drop(columns = 'def_pay', axis=1)
 Y = dataset['def_pay']
+print(dataset.head())
 
-
-top5_data=dataset[['pay_4','pay_1','pay_2','pay_3','pay_5','def_pay']]
-
+top5_data=dataset[['pay_4','pay_1','pay_2','pay_3','pay_5','def_pay','age','marriage','education','limit_bal']]
+print(top5_data.pay_5.value_counts())
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 scaler.fit(X)
@@ -358,78 +359,60 @@ if error_flag==0:
 
 def display_top_5(top5_data):
     st.markdown('## Top 5 features that helped in prediction ')
-    st.markdown('### PAY_5: ')
-    st.markdown('Normalized score from external data source.')
+    st.markdown('### Limit Balance')
     fig,axes=plt.subplots()
-    axes.set_xlabel('pay_5')
-    axes.set_ylabel('Density')
-    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_5'],label='Will Repay')
-    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_5'],label='Will Default')
+    axes.set_xlabel('Pay_5')
+    axes.set_ylabel('Default_Pay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'limit_bal'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'limit_bal'],label='Will Default')
+    axes.legend()
     st.pyplot(fig)
-    
     st.markdown('#### Analysis')
-    st.markdown('* External source 1 < 0.5 indicate high probability that client will not repay loan.')
-    st.markdown('* External source 1 > 0.5 indicate high probability that client will default loan.')
+    st.markdown('* People with less Limit Balance will repay their Payments')
+    st.markdown('* People with More Limit Balance will also repay their Payments.')
     st.markdown('* There is a visible sepration between two classes.')
-    
-    st.markdown('#### Conclusion')
-    st.markdown('* External source 1 is a useful feature.')
-
-    
-    
-    st.markdown('### PAY_3: ')
-    st.markdown('Payment rate is ratio of Amount Annuity and Amount Credit.')
-    st.markdown('Amount Annuity is the amount paid back in periodic intervals.')
-    st.markdown('Amount Credit is the amount recieved by the institution.')
+       
+    st.markdown('### AGE ')
     fig,axes=plt.subplots()
-    axes.set_xlabel('PAY_3')
-    axes.set_ylabel('Density')
+    axes.set_xlabel('AGE')
+    axes.set_ylabel('Default_Pay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'age'],label='Will Repay')
+    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'age'],label='Will Default')
+    axes.legend() 
+    st.pyplot(fig)
+    st.markdown('#### Analysis')
+    st.markdown('* Client having age  greater than 40 have high probability of being default. ')
+    st.markdown('* Client having age  less than 40 have high probability of repaying loan.')
+    st.markdown('* There is a visible sepration between two classes.')
+    st.markdown('#### Conclusion')
+    st.markdown('Younger clients are more likely to repay as compared to older.')
+    
+    st.markdown('### Pay_3 ')
+    fig,axes=plt.subplots()
+    axes.set_xlabel('Pay_3')
+    axes.set_ylabel('Default_Pay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_3'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_3'],label='Will Default')
+    axes.legend() 
     st.pyplot(fig)
     st.markdown('#### Analysis')
-    st.markdown('* Client having payment rate < 0.06 have higher chance of repaying loan ')
-    st.markdown('* Client having payment rate > 0.06 and payment rate < 0.09  have higher chance of defaulting loan.')
-    st.markdown('* Client having payment rate between 0.09 and 0.11 have higher chance of repaying loan.')
+    st.markdown('* Pay_3 < 5 indicate high probability payment delay for less than 5 months')
+    st.markdown('* Pay_3 > 5 indicate high probability payment delay for greater than 5 months.')
     st.markdown('* There is a visible sepration between two classes.')
-    st.markdown('#### Conclusion')
-    st.markdown('* Payment Rate is a useful feature.')
-
     
-   
-    st.markdown('### PAY_2: ')
-    st.markdown("Client's age at the time of application.")
+    st.markdown('### Pay_1')
     fig,axes=plt.subplots()
-    axes.set_xlabel('pay_2')
-    axes.set_ylabel('Density')
-    sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_2'],label='Will Repay')
-    sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_2'],label='Will Default')
-    st.pyplot(fig)
-    st.markdown('#### Analysis')
-    st.markdown('* Client having age  less than 40 have high probability of being default. ')
-    st.markdown('* Client having age  greater than 40 have high probability of repaying loan.')
-    st.markdown('* There is a visible sepration between two classes.')
-    st.markdown('#### Conclusion')
-    st.markdown('Younger clients are more likely to default as compared to older.')
-    
-    st.markdown('### PAY_1: ')
-    st.markdown('Normalized score from external data source.')
-    fig,axes=plt.subplots()
-    axes.set_xlabel('pay_1')
-    axes.set_ylabel('Density')
+    axes.set_xlabel('Pay_1')
+    axes.set_ylabel('Default_Pay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==0,'pay_1'],label='Will Repay')
     sns.kdeplot(top5_data.loc[top5_data['def_pay']==1,'pay_1'],label='Will Default')
+    axes.legend() 
     st.pyplot(fig)
     st.markdown('#### Analysis')
-    st.markdown('* External source 3 < 0.4 indicate high probability that client will default loan.')
-    st.markdown('* (External source 3 > 0.5 and External source 3 < 0.9) indicate high probability that client will repay loan.')
+    st.markdown('* Pay_1 < 5 indicate high probability payment delay for less than 5 months')
+    st.markdown('* Pay_1 > 5 indicate high probability payment delay for greater than 5 months.')
     st.markdown('* There is a visible sepration between two classes.')
-    
-    st.markdown('#### Conclusion')
-    st.markdown('* External source 3 is a useful feature.')
-    
 
-    
     del top5_data
     gc.collect()
 
